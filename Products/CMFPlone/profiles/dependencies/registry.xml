@@ -740,6 +740,14 @@
       </value>
   </records>
 
+  <records prefix="plone.resources/mockup-patterns-livesearch"
+            interface='Products.CMFPlone.interfaces.IResourceRegistry'>
+      <value key="js">++resource++mockup/livesearch/pattern.js</value>
+      <value key="css">
+        <element>++resource++mockup/livesearch/pattern.livesearch.less</element>
+      </value>
+  </records>
+
   <records prefix="plone.resources/mockup-patterns-structure"
             interface='Products.CMFPlone.interfaces.IResourceRegistry'>
       <value key="js">++resource++mockup/structure/pattern.js</value>
@@ -986,6 +994,7 @@
     </field>
     <value>
       <element key="pickadate">{"selectYears": 200}</element>
+      <element key="modal">{"actionOptions": {"displayInModal": false}}</element>
     </value>
   </record>
 
