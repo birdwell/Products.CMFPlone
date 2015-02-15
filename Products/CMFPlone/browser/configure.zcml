@@ -56,13 +56,6 @@
 
   <browser:page
       for="*"
-      name="plone_javascript_variables.js"
-      class=".jsvariables.JSVariables"
-      permission="zope.Public"
-      />
-
-  <browser:page
-      for="*"
       name="navtree_builder_view"
       class=".navigation.CatalogNavigationTree"
       permission="zope.Public"
@@ -106,6 +99,12 @@
       for="*"
       name="main_template"
       class=".main_template.MainTemplate"
+      permission="zope.Public"
+      />
+  <browser:page
+      for="*"
+      name="render-toolbar"
+      template="templates/toolbar.pt"
       permission="zope.Public"
       />
 
@@ -193,4 +192,8 @@
       template="templates/updated_search.pt"
       />
 
+  <browser:resource
+      name="search.js"
+      file="static/search.js"
+      />
 </configure>
