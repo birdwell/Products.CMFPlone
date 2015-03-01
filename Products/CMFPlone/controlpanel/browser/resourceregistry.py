@@ -12,6 +12,10 @@ from zExceptions import NotFound
 from zope.component import getUtility
 import json
 from Products.CMFPlone.resources import add_bundle_on_request
+from Products.CMFPlone.resources import RESOURCE_DEVELOPMENT_MODE
+from plone.registry import field
+from plone.registry.record import Record
+from Products.statusmessages.interfaces import IStatusMessage
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -45,7 +49,19 @@ def updateRecordFromDict(record, data):
                         item = item.encode('utf-8')
                     newval.append(item)
                 val = newval
-            setattr(record, name, val)
+
+            full_name = record.__prefix__ + name
+            try:
+                record.__registry__[full_name] = val
+            except (AttributeError, KeyError) as ex:  # noqa
+                # upgrade record on the fly, try to at least
+                if not val:
+                    continue
+                if type(val) == bool:
+                    record.__registry__.records[full_name] = Record(
+                        field.Bool(title=u""), val)
+                else:
+                    raise
 
 
 class OverrideFolderManager(object):
@@ -114,6 +130,11 @@ class ResourceRegistryControlPanelView(RequireJsView):
                     'msg': 'Invalid action: ' + action
                 })
         else:
+            if RESOURCE_DEVELOPMENT_MODE:
+                messages = IStatusMessage(self.request)
+                messages.add(u"The FEDEV environment variable is set. No matter "
+                             u"what settings are done here, all bundles will "
+                             u"always be in development mode.", type=u"warn")
             return self.index()
 
     @property
@@ -122,7 +143,7 @@ class ResourceRegistryControlPanelView(RequireJsView):
         return getUtility(IRegistry)
 
     def update_registry_collection(self, itype, prefix, newdata):
-        rdata = self.registry.collectionOfInterface(itype, prefix=prefix)
+        rdata = self.registry.collectionOfInterface(itype, prefix=prefix, check=False)
         for key, data in newdata.items():
             if key not in rdata:
                 record = rdata.add(key)
@@ -182,11 +203,11 @@ class ResourceRegistryControlPanelView(RequireJsView):
 
     def get_bundles(self):
         return self.registry.collectionOfInterface(
-            IBundleRegistry, prefix="plone.bundles")
+            IBundleRegistry, prefix="plone.bundles", check=False)
 
     def get_resources(self):
         return self.registry.collectionOfInterface(
-            IResourceRegistry, prefix="plone.resources")
+            IResourceRegistry, prefix="plone.resources", check=False)
 
     def less_build_config(self):
         site_url = self.context.portal_url()

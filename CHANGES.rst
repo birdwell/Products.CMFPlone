@@ -8,6 +8,28 @@ Changelog
 5.0b1 (unreleased)
 ------------------
 
+- Read security settings from the registry instead of portal properties.
+  [jcerjak,timo]
+
+- Fix tests for plone.app.contenttypes unified view names, which uses
+  ``listing_view`` for Folder and Collection types.
+  [thet]
+
+- Remove ``selectable_views`` from ``properties.xml``, which isn't used
+  anywhere anymore.
+  [thet]
+
+- Remove the remaining ``Topic`` entry in ``default_page_types`` from
+  ``propertiestool.xml``. This setting is now done in
+  ``plone.app.contenttypes`` respectively ``Products.ATContentTypes``.
+  [thet]
+
+- Add __version__ attribute to __init__.py. This allows us to retrieve the
+  current Plone version with 'Products.CMFPlone.__version__'. Even though this
+  is no offical standard, many packages in the Python standard library provide
+  this.
+  [timo]
+
 - Replaced the legacy mark_special_links javascript with a
   corresponding mockup pattern.
   [fulv]
