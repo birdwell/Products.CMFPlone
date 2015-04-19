@@ -8,6 +8,10 @@ Changelog
 5.0b2 (unreleased)
 ------------------
 
+- Fix add-ons to be installed using CMFQuickInstaller (restore support
+  for Extensions/Install.py)
+  [datakurre]
+
 - Fix submission of tinymce control panel.
   [davisagli]
 
